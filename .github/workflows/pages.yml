@@ -1,0 +1,36 @@
+name: Deploy school song player
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: true
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v6
+      - name: Prepare website assets
+        shell: python
+        run: |
+          from pathlib import Path
+          import shutil
+          files = {'5-app.js': 'app.js', '8-ltes-school-logo-transparent.png': 'assets/branding/ltes-school-logo-transparent.png', '9-ltes-school-logo.webp': 'assets/branding/ltes-school-logo.webp', '10-ltes-sound-bars.svg': 'assets/branding/ltes-sound-bars.svg', '11-buttons.css': 'buttons.css', '14-BpmfGenSenRounded-R.ttf': 'fonts/bpmf/BpmfGenSenRounded-R.ttf', '15-LICENSE-2.0.txt': 'fonts/bpmf/LICENSE-2.0.txt', '16-LICENSE-Gen.txt': 'fonts/bpmf/LICENSE-Gen.txt', '17-NOTICE.txt': 'fonts/bpmf/NOTICE.txt', '18-README.md': 'fonts/bpmf/README.md', '19-readings.js': 'fonts/bpmf/readings.js', '20-icon.svg': 'icon.svg', '21-index.html': 'index.html', '22-manifest.webmanifest': 'manifest.webmanifest', '26-藍田的光.mp3': 'music/ltes-light/audio/藍田的光.mp3', '28-藍田的光 注音版.pdf': 'music/ltes-light/lyrics/藍田的光 注音版.pdf', '30-auto-candidate.js': 'music/ltes-light/timing/auto-candidate.js', '33-藍田 Soul.mp3': 'music/ltes-soul/audio/藍田 Soul.mp3', '35-藍田 Soul 注音版.pdf': 'music/ltes-soul/lyrics/藍田 Soul 注音版.pdf', '37-auto-candidate.js': 'music/ltes-soul/timing/auto-candidate.js', '38-player-light.css': 'player-light.css', '39-songs.js': 'songs.js', '40-styles.css': 'styles.css', '41-sw.js': 'sw.js'}
+          for source, target in files.items():
+              destination = Path('dist') / target
+              destination.parent.mkdir(parents=True, exist_ok=True)
+              shutil.copyfile(source, destination)
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
+      - uses: actions/deploy-pages@v4
+        id: deployment
