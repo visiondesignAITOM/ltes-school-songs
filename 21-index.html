@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f0f4f9" />
+    <meta name="description" content="藍田國小校歌影音播放器" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="icon" href="./icon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./player-light.css" />
+    <link rel="stylesheet" href="./buttons.css" />
+    <title>藍田校歌播放器｜按鈕統一候選版</title>
+  </head>
+  <body>
+    <svg class="svg-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+      <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 4v16l13-8z" fill="currentColor" stroke="none"/></symbol>
+      <symbol id="i-pause" viewBox="0 0 24 24"><path d="M7 5v14M17 5v14" stroke-width="5"/></symbol>
+      <symbol id="i-prev" viewBox="0 0 24 24"><path d="M5 5v14M19 5 8 12l11 7z"/></symbol>
+      <symbol id="i-next" viewBox="0 0 24 24"><path d="M19 5v14M5 5l11 7-11 7z"/></symbol>
+      <symbol id="i-back" viewBox="0 0 24 24"><path d="M5 8a8 8 0 1 1-1 8M5 3v5h5"/></symbol>
+      <symbol id="i-forward" viewBox="0 0 24 24"><path d="M19 8a8 8 0 1 0 1 8M19 3v5h-5"/></symbol>
+      <symbol id="i-expand" viewBox="0 0 24 24"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></symbol>
+      <symbol id="i-collapse" viewBox="0 0 24 24"><path d="M3 8h5V3m13 5h-5V3M8 21v-5H3m13 5v-5h5"/></symbol>
+      <symbol id="i-settings" viewBox="0 0 24 24"><path d="M4 7h16M4 17h16M9 4v6m6 4v6"/></symbol>
+      <symbol id="i-songs" viewBox="0 0 24 24"><path d="M4 5h12M4 10h9M4 15h6m8-4v8m0-8 4-1v7"/><ellipse cx="15.5" cy="19" rx="2.5" ry="2"/><ellipse cx="20" cy="17" rx="2" ry="2"/></symbol>
+      <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+    </defs></svg>
+    <main class="app-shell">
+      <header class="hero">
+        <h1 class="site-brand" aria-label="ltes 校歌播放器"><img class="school-logo" src="./assets/branding/ltes-school-logo-transparent.png" alt="藍田國小標誌" /><span>ltes<span class="brand-dot">.</span></span></h1>
+        <div class="school-heading"><strong>藍田國小</strong><span>一起唱校歌</span></div>
+        <nav id="song-list" class="site-song-list" aria-label="選擇校歌"></nav>
+      </header>
+
+      <section class="lyrics-panel panel" aria-label="歌詞">
+        <div class="lyrics-header">
+        <div class="now-playing">
+          <div>
+            <p class="eyebrow">Now playing</p>
+            <div class="song-heading"><h2 id="track-title">藍田 Soul</h2><span class="song-credit">作詞作曲：有錢查理</span></div>
+            <p id="track-subtitle">跟著藍田精神一路探索</p>
+          </div>
+        </div>
+        <div class="lyrics-view-toolbar">
+          <div class="lyrics-size-options view-segment" role="group" aria-label="歌詞顯示模式">
+            <button class="ui-button" type="button" data-lyrics-view="dynamic" aria-pressed="true" aria-controls="lyrics lyrics-stage">動態歌詞</button>
+            <button class="ui-button" type="button" data-lyrics-view="static" aria-pressed="false" aria-controls="static-lyrics">完整歌詞</button>
+          </div>
+          <button id="fullscreen-toggle" class="ui-button fullscreen-toggle header-tool" type="button" aria-label="全螢幕" title="全螢幕" aria-pressed="false"><svg aria-hidden="true"><use href="#i-expand"/></svg><span>全螢幕</span></button>
+          <button id="display-settings-toggle" class="ui-button header-tool" type="button" aria-label="顯示設定" title="顯示設定" aria-haspopup="dialog"><svg aria-hidden="true"><use href="#i-settings"/></svg><span>顯示設定</span></button>
+        </div>
+        </div>
+        <p id="view-status" class="view-status" role="status"></p>
+        <div id="lyrics" class="lyrics-preview" data-text-size="medium" data-motion="line" tabindex="0" aria-label="動態歌詞"></div>
+        <div id="lyrics-stage" class="lyrics-stage" data-text-size="medium" data-motion="line" hidden tabindex="0" aria-label="全螢幕動態歌詞"></div>
+        <div id="static-lyrics" class="lyrics-preview static-lyrics" data-text-size="medium" hidden tabindex="0" aria-label="完整靜態歌詞"></div>
+      </section>
+
+      <section class="workspace" aria-label="校歌播放器">
+        <section class="player-panel panel" aria-label="播放控制">
+          <div class="progress-area">
+            <input id="progress" type="range" min="0" max="0" step="0.01" value="0" aria-label="播放進度" />
+            <div class="time-row"><span id="current-time">0:00</span><span id="duration">0:00</span></div>
+          </div>
+
+          <div class="transport-controls">
+            <button class="ui-button icon-button" id="previous" type="button" aria-label="上一首" title="上一首"><svg aria-hidden="true"><use href="#i-prev"/></svg><span class="transport-label">上一首</span></button>
+            <button class="ui-button icon-button" id="rewind" type="button" aria-label="後退 10 秒" title="後退 10 秒"><svg aria-hidden="true"><use href="#i-back"/></svg><span class="transport-label">退後 10 秒</span></button>
+            <button class="ui-button play-button" id="play-toggle" type="button" aria-label="播放" title="播放"><svg aria-hidden="true"><use href="#i-play"/></svg><span class="transport-label">播放</span></button>
+            <button class="ui-button icon-button" id="forward" type="button" aria-label="前進 10 秒" title="前進 10 秒"><svg aria-hidden="true"><use href="#i-forward"/></svg><span class="transport-label">前進 10 秒</span></button>
+            <button class="ui-button icon-button" id="next" type="button" aria-label="下一首" title="下一首"><svg aria-hidden="true"><use href="#i-next"/></svg><span class="transport-label">下一首</span></button>
+          </div>
+
+          <div class="settings-grid">
+            <label class="setting-card" for="speed">
+              <span class="setting-label">播放速度</span>
+              <output id="speed-value" for="speed">1.0x</output>
+              <input id="speed" type="range" min="0.5" max="2" step="0.1" value="1" />
+              <span class="range-hint"><span>0.5x</span><span>2.0x</span></span>
+            </label>
+            <div class="setting-card">
+              <span class="setting-label">循環模式</span>
+              <div class="loop-options" id="loop-options" role="radiogroup" aria-label="循環模式">
+                <button class="ui-button loop-option is-selected" type="button" data-loop-mode="none" role="radio" aria-checked="true">不重複</button>
+                <button class="ui-button loop-option" type="button" data-loop-mode="one" role="radio" aria-checked="false">重複這首</button>
+                <button class="ui-button loop-option" type="button" data-loop-mode="all" role="radio" aria-checked="false">全部重複</button>
+              </div>
+              <span class="setting-help" id="loop-help">播放結束後停止</span>
+            </div>
+          </div>
+
+          <p class="audio-status" id="audio-status" role="status">準備播放</p>
+          <audio id="audio" preload="metadata"></audio>
+        </section>
+
+
+      </section>
+
+      <dialog id="display-settings-dialog" class="display-settings-dialog" aria-labelledby="display-settings-title">
+        <div class="display-settings-heading"><h2 id="display-settings-title">顯示設定</h2><button id="display-settings-close" class="ui-button header-tool" type="button" aria-label="關閉顯示設定"><svg aria-hidden="true"><use href="#i-close"/></svg></button></div>
+        <div class="lyrics-toolbar">
+          <span id="lyrics-size-label" class="setting-label">文字大小</span>
+          <div class="lyrics-size-options" role="group" aria-labelledby="lyrics-size-label">
+            <button class="ui-button" type="button" data-lyrics-size="small" aria-pressed="false" aria-controls="lyrics lyrics-stage static-lyrics">小</button>
+            <button class="ui-button" type="button" data-lyrics-size="medium" aria-pressed="true" aria-controls="lyrics lyrics-stage static-lyrics">中</button>
+            <button class="ui-button" type="button" data-lyrics-size="large" aria-pressed="false" aria-controls="lyrics lyrics-stage static-lyrics">大</button>
+          </div>
+        <div class="lyrics-size-options lyrics-motion-options" role="group" aria-label="動態歌詞方式">
+          <button class="ui-button" type="button" data-lyrics-motion="line" aria-pressed="true">逐句動態</button>
+          <button class="ui-button" type="button" data-lyrics-motion="word" aria-pressed="false">逐字動態</button>
+        </div>
+        </div>
+        <p class="display-settings-note">調整顯示方式，音樂會繼續播放。</p>
+        <button id="display-settings-done" class="ui-button settings-done" type="button">完成</button>
+      </dialog>
+
+      <footer class="app-footer">
+        <span>第一個可驗證製作切片</span>
+        <span>桌面／平板／手機響應式介面</span>
+      </footer>
+    </main>
+    <script src="./songs.js"></script>
+    <script src="./music/ltes-soul/timing/auto-candidate.js"></script>
+    <script src="./music/ltes-light/timing/auto-candidate.js"></script>
+    <script src="./fonts/bpmf/readings.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>

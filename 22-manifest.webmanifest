@@ -1,0 +1,10 @@
+{
+  "name": "藍田國小校歌播放器",
+  "short_name": "藍田校歌",
+  "lang": "zh-Hant",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f0f4f9",
+  "theme_color": "#f0f4f9",
+  "icons": [{ "src": "./icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}

@@ -1,0 +1,115 @@
+/* Shared button component. Layout and responsive dimensions live in player-light.css.
+   Every native button, including generated song choices, uses .ui-button. */
+:root {
+  --button-radius:14px;
+  --button-border:transparent;
+  --button-ink:#34465b;
+  --button-selected:#88c219;
+  --button-selected-surface:#edf6dc;
+  --button-selected-ink:#3f5900;
+  --button-primary:var(--logo-blue);
+  --button-focus:var(--logo-blue);
+  --button-weight:700;
+  --button-icon-stroke:1.6;
+}
+.ui-button {
+  box-sizing:border-box;
+  min-height:44px;
+  min-width:44px;
+  padding:0 16px;
+  font-size:14px;
+  border:1px solid var(--button-border);
+  border-radius:var(--button-radius);
+  background:#fff;
+  color:var(--button-ink);
+  font-weight:var(--button-weight);
+  line-height:1.25;
+  box-shadow:none;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  transition:background-color 120ms ease,border-color 120ms ease,box-shadow 120ms ease;
+}
+.ui-button[aria-pressed="true"],.ui-button[aria-checked="true"] {
+  border-color:var(--button-selected);
+  background:var(--button-selected-surface);
+  color:var(--button-selected-ink);
+  /* Selection is carried by the tinted surface and a fine green edge. */
+  box-shadow:none;
+}
+.ui-button.play-button,.ui-button.settings-done {
+  border-color:var(--button-primary);
+  background:var(--button-primary);
+  color:#fff;
+}
+.ui-button svg {
+  fill:none;
+  stroke:currentColor;
+  stroke-width:var(--button-icon-stroke);
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+.ui-button:focus-visible {
+  outline:3px solid var(--button-focus);
+  outline-offset:3px;
+}
+@media(hover:hover) {
+  .ui-button:hover { background:#f0f4f9; border-color:transparent; }
+  .ui-button[aria-pressed="true"]:hover,.ui-button[aria-checked="true"]:hover {
+    background:#e5f1cd; border-color:var(--button-selected);
+  }
+  .ui-button.play-button:hover,.ui-button.settings-done:hover { background:var(--logo-blue-hover); border-color:var(--logo-blue-hover); }
+}
+.ui-button:active {
+  background:#dce5ef;
+  box-shadow:inset 0 2px 4px #263d5d35;
+}
+.ui-button[aria-pressed="true"]:active,.ui-button[aria-checked="true"]:active { background:#d8eab8; }
+.ui-button.play-button:active,.ui-button.settings-done:active { background:var(--logo-blue-pressed); }
+.ui-button:disabled { opacity:.5; cursor:default; box-shadow:none; }
+.view-segment { background:transparent; border-radius:0; box-shadow:none; gap:6px; padding:0; }
+/* Fullscreen changes target sizes, never component colors or corner shape. */
+.is-fullscreen .transport-label { font-weight:var(--button-weight); }
+@media(prefers-reduced-motion:reduce) { .ui-button { transition:none; } }
+@media(forced-colors:active) {
+  .ui-button[aria-pressed="true"],.ui-button[aria-checked="true"] { border:3px double Highlight; }
+}
+
+@media(max-width:360px) { .transport-controls { gap:8px; } }
+
+/* Single sizing table for each component and its responsive variants. */
+.ui-button.site-song-tab { min-height:60px; }
+.ui-button.header-tool { min-height:44px; padding:0 10px; font-size:13px; }
+.view-segment .ui-button { font-size:13px; }
+.transport-controls .ui-button { width:44px; height:44px; padding:0; }
+.transport-controls .ui-button.play-button { width:56px; height:56px; border-radius:50%; }
+.ui-button.loop-option { padding:0 18px; }
+.ui-button.settings-done { width:100%; }
+.is-fullscreen .ui-button.site-song-tab { min-height:64px; padding:0 24px; font-size:20px; }
+.is-fullscreen .view-segment .ui-button { min-height:56px; padding:0 24px; font-size:18px; }
+.is-fullscreen .lyrics-header .ui-button.header-tool { min-height:64px; padding:0 18px; font-size:18px; }
+.is-fullscreen .transport-controls .ui-button { width:104px; height:88px; }
+.is-fullscreen .transport-controls .ui-button.play-button { width:96px; height:96px; }
+@media(max-width:1100px) and (min-width:701px) {
+  .is-fullscreen .view-segment .ui-button { padding:0 16px; font-size:16px; }
+  .is-fullscreen .lyrics-header .ui-button.header-tool { padding:0 12px; font-size:16px; }
+}
+@media(max-width:700px) {
+  .ui-button.site-song-tab { padding:0 12px; font-size:13px; }
+  .view-segment .ui-button { padding:0 8px; font-size:12px; }
+  .lyrics-header .ui-button.header-tool { width:44px; height:44px; padding:0; }
+  .transport-controls .ui-button.play-button { width:50px; height:50px; }
+  .ui-button.loop-option { padding:0 8px; font-size:12px; }
+  .is-fullscreen .ui-button.site-song-tab { min-height:56px; padding:0 10px; font-size:16px; }
+  .is-fullscreen .view-segment .ui-button { min-height:48px; padding:0 8px; font-size:14px; }
+  .is-fullscreen .lyrics-header .ui-button.header-tool { width:56px; height:56px; min-height:56px; padding:0; }
+  .is-fullscreen .transport-controls .ui-button { width:52px; height:72px; }
+  .is-fullscreen .transport-controls .ui-button.play-button { width:72px; height:72px; }
+}
+@media(max-height:600px) { .app-shell:not(.is-fullscreen) .transport-controls .ui-button.play-button { width:44px; height:44px; } }
+@media(max-height:500px) and (min-width:701px) {
+  .is-fullscreen .ui-button.site-song-tab { min-height:60px; font-size:16px; }
+  .is-fullscreen .view-segment .ui-button,.is-fullscreen .lyrics-header .ui-button.header-tool { min-height:48px; }
+  .is-fullscreen .transport-controls .ui-button { width:80px; height:64px; }
+  .is-fullscreen .transport-controls .ui-button.play-button { width:68px; height:68px; }
+}
