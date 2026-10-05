@@ -908,5 +908,7 @@ document.fonts.load('24px "ltes Bpmf"').then(faces => {
 });
 
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
+  // Version the worker URL too, so browsers holding a long-lived previous
+  // worker immediately discover this deployment even when its script is cached.
+  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=62').catch(() => {}));
 }
