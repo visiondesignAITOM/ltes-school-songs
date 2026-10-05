@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ltes-buttons-candidate-v58-readings';
+const CACHE_NAME = 'ltes-buttons-candidate-v59-readings-refresh';
 const APP_SHELL = [
   './', './index.html', './styles.css', './app.js', './songs.js',
   './player-light.css', './buttons.css',
@@ -10,7 +10,7 @@ const APP_SHELL = [
 ];
 
 self.addEventListener('install', (event) => {
-  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL)).then(() => self.skipWaiting()));
+  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL.map((url) => new Request(url, { cache: 'reload' })))).then(() => self.skipWaiting()));
 });
 
 self.addEventListener('activate', (event) => {
