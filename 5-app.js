@@ -329,18 +329,6 @@ const lyricsNoticeText = document.createElement('span');
 const lyricsSizeOptions = document.querySelectorAll('[data-lyrics-size]');
 const displaySettingsDialog = document.querySelector('#display-settings-dialog');
 const displaySettingsToggle = document.querySelector('#display-settings-toggle');
-const pronunciationDialog = document.querySelector('#pronunciation-dialog');
-const pronunciationForm = document.querySelector('#pronunciation-form');
-const pronunciationInput = document.querySelector('#pronunciation-input');
-const pronunciationModeToggle = document.querySelector('#pronunciation-mode-toggle');
-const pronunciationModeStatus = document.querySelector('#pronunciation-mode-status');
-const pronunciationOverridesKey = 'ltes-pronunciation-overrides-v1';
-let pronunciationOverrides = {};
-try { pronunciationOverrides = JSON.parse(localStorage.getItem(pronunciationOverridesKey) || '{}'); } catch { pronunciationOverrides = {}; }
-let pronunciationTarget = null;
-let pronunciationCalibrationMode = false;
-const readingOverrideKey = (character, reading) => `${character}|${reading}`;
-function effectiveReading(word) { return pronunciationOverrides[readingOverrideKey(word.text, word.zhuyin)] || word.zhuyin; }
 displaySettingsToggle.addEventListener('click', () => displaySettingsDialog.showModal());
 ['#display-settings-close', '#display-settings-done'].forEach(selector => {
   document.querySelector(selector).addEventListener('click', () => displaySettingsDialog.close());
@@ -433,7 +421,7 @@ function renderLyricLines(container, lines) {
       wordElement.dataset.wordIndex = wordIndex;
       wordElement.dataset.text = word.text;
       wordElement.innerHTML = `<span class="zhuyin">${word.zhuyin}</span><span class="hanzi">${word.text}</span>`;
-      const reading = effectiveReading(word);
+      const reading = word.zhuyin;
       const readingKey = `${word.text}|${reading}`;
       wordElement.querySelector('.zhuyin').textContent = reading;
       if (reading && window.bpmfFontFailed !== true && Object.hasOwn(window.BPMF_VARIANTS || {}, readingKey)) {
@@ -442,16 +430,6 @@ function renderLyricLines(container, lines) {
         wordElement.setAttribute('aria-label', `${word.text} ${reading}`);
       }
       words.append(wordElement);
-      wordElement.addEventListener('click', event => {
-        if (!pronunciationCalibrationMode) return;
-        event.stopPropagation();
-        pronunciationTarget = { word };
-        document.querySelector('#pronunciation-character').textContent = word.text;
-        pronunciationInput.value = reading;
-        pronunciationDialog.showModal();
-        pronunciationInput.focus();
-        pronunciationInput.select();
-      });
     });
     // All source lyrics have reviewed phrase boundaries. Original word nodes
     // and timing indices remain intact, including whitespace and punctuation.
@@ -517,52 +495,6 @@ function renderLyrics() {
   stageKey = '';
   updateLyricStage(audio.currentTime);
 }
-
-pronunciationModeToggle.addEventListener('click', () => {
-  pronunciationCalibrationMode = !pronunciationCalibrationMode;
-  pronunciationModeToggle.setAttribute('aria-pressed', String(pronunciationCalibrationMode));
-  pronunciationModeToggle.textContent = pronunciationCalibrationMode ? '結束校正' : '開始校正';
-  pronunciationModeStatus.textContent = pronunciationCalibrationMode ? '校正模式已開啟。點選任一歌詞字即可編輯注音。' : '校正模式已關閉。已儲存的讀音保留在這台裝置。';
-  document.querySelector('.app-shell').classList.toggle('pronunciation-calibration-mode', pronunciationCalibrationMode);
-  if (pronunciationCalibrationMode) displaySettingsDialog.close();
-});
-
-pronunciationForm.addEventListener('submit', event => {
-  if (event.submitter?.id !== 'pronunciation-save') { pronunciationTarget = null; return; }
-  event.preventDefault();
-  if (!pronunciationTarget || !pronunciationInput.reportValidity()) return;
-  pronunciationOverrides[readingOverrideKey(pronunciationTarget.word.text, pronunciationTarget.word.zhuyin)] = pronunciationInput.value.trim();
-  try { localStorage.setItem(pronunciationOverridesKey, JSON.stringify(pronunciationOverrides)); } catch {}
-  pronunciationDialog.close();
-  pronunciationTarget = null;
-  renderLyrics();
-  updateLyrics(audio.currentTime, { scroll: false });
-});
-
-document.querySelector('#pronunciation-export').addEventListener('click', () => {
-  const blob = new Blob([JSON.stringify(pronunciationOverrides, null, 2)], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = '藍田校歌注音校正.json';
-  link.click();
-  URL.revokeObjectURL(url);
-});
-
-document.querySelector('#pronunciation-import').addEventListener('change', async event => {
-  const file = event.target.files?.[0];
-  if (!file) return;
-  try {
-    const imported = JSON.parse(await file.text());
-    if (!imported || typeof imported !== 'object' || Array.isArray(imported) || Object.values(imported).some(value => typeof value !== 'string' || !/^[ㄅ-ㄩ˙ˊˇˋ]+$/u.test(value))) throw new Error('format');
-    pronunciationOverrides = { ...pronunciationOverrides, ...imported };
-    localStorage.setItem(pronunciationOverridesKey, JSON.stringify(pronunciationOverrides));
-    renderLyrics();
-    updateLyrics(audio.currentTime, { scroll: false });
-    pronunciationModeStatus.textContent = '校正紀錄已匯入。';
-  } catch { pronunciationModeStatus.textContent = '無法匯入這個檔案，請選擇先前匯出的 JSON 校正紀錄。'; }
-  event.target.value = '';
-});
 
 function applyLyricView() {
   lyrics.hidden = lyricView !== 'dynamic' || expanded;
@@ -909,7 +841,5 @@ document.fonts.load('24px "ltes Bpmf"').then(faces => {
 });
 
 if ('serviceWorker' in navigator) {
-  // Version the worker URL too, so browsers holding a long-lived previous
-  // worker immediately discover this deployment even when its script is cached.
-  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=63').catch(() => {}));
+  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=64').catch(() => {}));
 }
