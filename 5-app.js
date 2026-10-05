@@ -524,6 +524,7 @@ pronunciationModeToggle.addEventListener('click', () => {
   pronunciationModeToggle.textContent = pronunciationCalibrationMode ? '結束校正' : '開始校正';
   pronunciationModeStatus.textContent = pronunciationCalibrationMode ? '校正模式已開啟。點選任一歌詞字即可編輯注音。' : '校正模式已關閉。已儲存的讀音保留在這台裝置。';
   document.querySelector('.app-shell').classList.toggle('pronunciation-calibration-mode', pronunciationCalibrationMode);
+  if (pronunciationCalibrationMode) displaySettingsDialog.close();
 });
 
 pronunciationForm.addEventListener('submit', event => {
@@ -910,5 +911,5 @@ document.fonts.load('24px "ltes Bpmf"').then(faces => {
 if ('serviceWorker' in navigator) {
   // Version the worker URL too, so browsers holding a long-lived previous
   // worker immediately discover this deployment even when its script is cached.
-  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=62').catch(() => {}));
+  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=63').catch(() => {}));
 }

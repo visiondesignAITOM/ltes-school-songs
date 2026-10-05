@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ltes-buttons-candidate-v61-calibration';
+const CACHE_NAME = 'ltes-buttons-candidate-v63-calibration';
 const APP_SHELL = [
   './', './index.html', './styles.css', './app.js', './songs.js',
   './player-light.css', './buttons.css',
