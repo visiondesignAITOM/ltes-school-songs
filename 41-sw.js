@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ltes-buttons-candidate-v64-player';
+const CACHE_NAME = 'ltes-buttons-candidate-v65-player';
 const APP_SHELL = [
   './', './index.html', './styles.css', './app.js', './songs.js',
   './player-light.css', './buttons.css',
