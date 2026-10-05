@@ -112,7 +112,26 @@
         </div>
         </div>
         <p class="display-settings-note">調整顯示方式，音樂會繼續播放。</p>
+        <section class="pronunciation-tools" aria-label="注音校正工具">
+          <h3>注音校正</h3>
+          <p id="pronunciation-mode-status" role="status">開啟校正後，點歌詞中的字即可編輯讀音；結果只儲存在這台裝置。</p>
+          <div class="pronunciation-actions">
+            <button id="pronunciation-mode-toggle" class="ui-button" type="button" aria-pressed="false">開始校正</button>
+            <button id="pronunciation-export" class="ui-button" type="button">匯出校正</button>
+            <label class="ui-button pronunciation-import">匯入校正<input id="pronunciation-import" type="file" accept="application/json,.json" /></label>
+          </div>
+        </section>
         <button id="display-settings-done" class="ui-button settings-done" type="button">完成</button>
+      </dialog>
+
+      <dialog id="pronunciation-dialog" class="pronunciation-dialog" aria-labelledby="pronunciation-title">
+        <form id="pronunciation-form" method="dialog">
+          <h2 id="pronunciation-title">校正注音</h2>
+          <p class="pronunciation-character" id="pronunciation-character"></p>
+          <label for="pronunciation-input">注音（例如 ㄩㄥˇ）</label>
+          <input id="pronunciation-input" name="reading" type="text" inputmode="text" autocomplete="off" required pattern="[ㄅ-ㄩ˙ˊˇˋ]+" />
+          <div class="pronunciation-actions"><button class="ui-button" id="pronunciation-cancel" value="cancel">取消</button><button class="ui-button" id="pronunciation-save" value="save">儲存</button></div>
+        </form>
       </dialog>
 
       <footer class="app-footer">

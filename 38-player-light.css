@@ -458,3 +458,17 @@ body { background:#f0f4f9; }
 /* Keep the composer credit beside the title, wrapping on narrow screens. */
 .song-heading { display:flex; align-items:baseline; flex-wrap:wrap; gap:4px 14px; min-width:0; }
 .song-credit { font-weight:400; letter-spacing:normal; line-height:1.4; white-space:nowrap; }
+.pronunciation-tools { border-top:1px solid #e5eaf2; padding-top:14px; margin-top:12px; }
+.pronunciation-tools h3 { margin:0 0 6px; font-size:16px; }
+.pronunciation-tools p { margin:0 0 10px; color:#586474; font-size:13px; line-height:1.5; }
+.pronunciation-actions { display:flex; flex-wrap:wrap; align-items:center; gap:8px; }
+.pronunciation-actions .ui-button,.pronunciation-import { min-height:40px; padding:8px 12px; border:1px solid #d7e0eb; border-radius:12px; background:#f5f8fc; color:#344c6d; font:inherit; font-size:13px; cursor:pointer; }
+.pronunciation-import input { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); }
+.pronunciation-dialog { width:min(380px,calc(100% - 32px)); border:1px solid #d7e0eb; border-radius:20px; padding:24px; background:#fff; color:#202124; box-shadow:0 24px 80px #15253f24; }
+.pronunciation-dialog::backdrop { background:#24364d66; backdrop-filter:blur(3px); }
+.pronunciation-dialog form { display:grid; gap:14px; }
+.pronunciation-dialog h2,.pronunciation-dialog p { margin:0; }
+.pronunciation-character { font-size:36px; color:#185abc; }
+.pronunciation-dialog label { font-size:14px; }
+.pronunciation-dialog input[type="text"] { width:100%; min-height:48px; box-sizing:border-box; border:1px solid #aab9cb; border-radius:10px; padding:10px 12px; font:inherit; font-size:20px; }
+.pronunciation-calibration-mode .lyric-word { cursor:crosshair; outline:1px dashed #5385cf; outline-offset:2px; }
